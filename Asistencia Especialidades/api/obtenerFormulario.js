@@ -3,7 +3,7 @@ import path from 'path';
 
 export default function handler(req, res) {
   const { id } = req.query;
-  const filePath = path.resolve('./data/formularios.json');
+  const filePath = path.resolve('.Asistencia Especialidades/data/formularios.json');
   const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
   if (!data[id]) return res.status(404).json({ error: "Formulario no encontrado" });

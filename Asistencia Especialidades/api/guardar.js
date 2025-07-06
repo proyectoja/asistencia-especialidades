@@ -3,10 +3,10 @@ export default async function handler(req, res) {
 
   const { id, nombre, correo, edad, telefono, asociacion } = req.body;
   const fecha = new Date().toISOString();
-  const archivo = `respuestas/${id}/${nombre.replace(/\s/g, "_")}_${Date.now()}.json`;
+  const archivo = `Asistencia Especialidades/respuestas/${id}/${nombre.replace(/\s/g, "_")}_${Date.now()}.json`;
   const contenido = Buffer.from(JSON.stringify({ nombre, correo, edad, telefono, asociacion, fecha }, null, 2)).toString('base64');
 
-  const response = await fetch(`https://api.github.com/repos/proyectoja/proyectoja.github.io/contents/${archivo}`, {
+  const response = await fetch(`https://api.github.com/repos/proyectoja/asistencia-especialidades/contents/${archivo}`, {
     method: 'PUT',
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`,

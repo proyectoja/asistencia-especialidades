@@ -19,7 +19,7 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const formId = params.get("id");
-    fetch("/api/obtenerFormulario?id=" + formId)
+    fetch("Asistencia Especialidades/api/obtenerFormulario?id=" + formId)
       .then(res => res.json())
       .then(data => {
         if (data.estado === "cerrado") {
@@ -41,7 +41,7 @@
         asociacion: document.getElementById("asociacion").value
       };
 
-      const res = await fetch("/api/guardar", {
+      const res = await fetch("Asistencia Especialidades/api/guardar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datos)
