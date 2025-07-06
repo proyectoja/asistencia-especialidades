@@ -30,7 +30,7 @@
         .then(res => res.json())
         .then(data => {
           data[id] = { titulo, fechaCierre: fecha };
-          return fetch("data/formularios.json", {
+          return fetch("Asistencia Especialidades/data/formularios.json", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data, null, 2)
