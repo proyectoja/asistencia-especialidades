@@ -26,11 +26,11 @@
       const titulo = document.getElementById("titulo").value.trim();
       const fecha = document.getElementById("fechaCierre").value;
   
-      fetch("Asistencia Especialidades/data/formularios.json")
+      fetch("data/formularios.json")
         .then(res => res.json())
         .then(data => {
           data[id] = { titulo, fechaCierre: fecha };
-          return fetch("Asistencia Especialidades/data/formularios.json", {
+          return fetch("data/formularios.json", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data, null, 2)
