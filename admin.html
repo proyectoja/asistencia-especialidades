@@ -18,6 +18,9 @@
     <button type="submit">Crear Formulario</button>
   </form>
   <p id="mensaje"></p>
+  <button id="btnLimpiarFormularios">🧹 Limpiar formularios vencidos</button>
+<p id="resultadoLimpieza"></p>
+
 
   <script>
     const baseURL = location.origin;
@@ -53,6 +56,29 @@
         });
 
     });
+
+
+
+    document.getElementById("btnLimpiarFormularios").addEventListener("click", async () => {
+  const pResultado = document.getElementById("resultadoLimpieza");
+  pResultado.textContent = "Procesando... ⏳";
+
+  try {
+    const res = await fetch("/api/limpiarFormulariosVencidos");
+
+    const data = await res.json();
+
+    if (res.ok) {
+      pResultado.textContent = `✅ ${data.mensaje}`;
+    } else {
+      pResultado.textContent = `❌ Error: ${data.error}`;
+    }
+  } catch (err) {
+    console.error(err);
+    pResultado.textContent = "❌ Ocurrió un error inesperado al limpiar.";
+  }
+});
+
   </script>
 </body>
 
