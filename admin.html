@@ -75,7 +75,7 @@ document.getElementById("titulo").value = tituloP;
 
       let id = document.getElementById("formId").value.trim();
       let titulo = document.getElementById("titulo").value.trim();
-      id = id + "-" + titulo.replace(/\s+/g, "") + "id" + generarIdAlfanumerico();
+      id = id + "-" + titulo.replace(/\s+/g, "") + "-" + "id" + generarIdAlfanumerico();
       function generarIdAlfanumerico() {
         const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let id = "";
