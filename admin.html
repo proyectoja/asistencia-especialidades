@@ -156,8 +156,9 @@ async function cargarFormularios() {
           <td>${f.creado ? new Date(f.creado).toLocaleString() : '―'}</td>
           <td>
         <a href="https://asistencia-especialidades.vercel.app/formulario.html?id=${id}" target="_blank">
-          <button>👁 Ver registros</button><br><button onclick="navigator.clipboard.writeText('${enlaceAux}')">📋 Copiar enlace</button>
+          <button>👁 Ver registros</button>
         </a>
+        <br><button onclick="navigator.clipboard.writeText('${enlaceAux}')">📋 Copiar enlace</button>
       </td>
         </tr>
       `;
