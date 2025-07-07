@@ -6,6 +6,7 @@
 </head>
 <body>
   <h2 id="tituloFormulario">Cargando...</h2>
+  <p id="contador"></p>
 
   <form id="formulario" style="display: none;">
     <input type="hidden" name="id" id="idFormulario">
@@ -35,56 +36,60 @@
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
       const hoy = new Date().toISOString().split("T")[0];
-
+  
       if (!id) {
         document.body.innerHTML = "<h2>❌ Error: ID de formulario no especificado.</h2>";
         return;
       }
-
+  
       try {
         const res = await fetch(`/api/obtenerFormulario?id=${id}`);
         if (!res.ok) {
           document.body.innerHTML = `<h2>❌ Formulario '${id}' no encontrado.</h2>`;
           return;
         }
-
+  
         const data = await res.json();
-
-        if (data.fechaCierre !== hoy) {
-          document.body.innerHTML = `<h2>⏳ El formulario '${id}' ya expiró. Solo estaba disponible hoy (${data.fechaCierre}).</h2>`;
+  
+        // ⏱️ INSERTAR CONTADOR DESDE AQUÍ
+        const fechaCierre = new Date(data.fechaCierre);
+        const ahora = new Date();
+  
+        if (ahora > fechaCierre) {
+          document.body.innerHTML = `<h2>⏳ El formulario '${id}' ya expiró. Solo estaba disponible hasta las ${fechaCierre.toLocaleTimeString()}.</h2>`;
           return;
         }
-
+  
+        const contadorEl = document.getElementById("contador");
+        const actualizarContador = () => {
+          const ahora = new Date();
+          const restante = fechaCierre - ahora;
+  
+          if (restante <= 0) {
+            contadorEl.textContent = "⛔ El formulario ha caducado.";
+            document.getElementById("formulario").style.display = "none";
+            return;
+          }
+  
+          const minutos = Math.floor((restante / 1000 / 60) % 60);
+          const segundos = Math.floor((restante / 1000) % 60);
+          contadorEl.textContent = `⏳ El formulario se cerrará en: ${minutos}:${segundos.toString().padStart(2, "0")}`;
+        };
+  
+        actualizarContador();
+        const intervalo = setInterval(actualizarContador, 1000);
+        // ⏱️ HASTA AQUÍ
+  
         document.getElementById("tituloFormulario").textContent = data.titulo;
         document.getElementById("idFormulario").value = id;
         document.getElementById("formulario").style.display = "block";
-
+  
       } catch (error) {
         console.error(error);
         document.body.innerHTML = "<h2>❌ Error al cargar el formulario.</h2>";
       }
     });
-
-    document.getElementById("formulario").addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const datos = Object.fromEntries(new FormData(this).entries());
-
-      const res = await fetch("/api/guardar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-      });
-
-      const mensaje = document.getElementById("mensaje");
-      if (res.ok) {
-        mensaje.textContent = "✅ Tu asistencia ha sido registrada. ¡Gracias!";
-        this.reset();
-        this.style.display = "none";
-      } else {
-        mensaje.textContent = "❌ Ocurrió un error al guardar.";
-      }
-    });
   </script>
+  
 </body>
 </html>
