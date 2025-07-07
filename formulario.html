@@ -90,8 +90,8 @@
           document.getElementById("tituloFormulario").textContent = data.titulo;
           document.getElementById("contador").textContent = `⛔ El formulario ha caducado. Estaba disponible hasta las ${fechaCierre.toLocaleTimeString()}.`;
           document.getElementById("formulario").style.display = "none";
-          cargarRespuestas(id); // 👈 aún cargamos la tabla
-          return; // ✅ pero ya no usamos innerHTML que borraría la tabla
+          cargarRespuestas(id); 
+          return; 
         }
 
 
