@@ -87,9 +87,13 @@
         const ahora = new Date();
 
         if (ahora > fechaCierre) {
-          document.body.innerHTML = `<h2>⏳ El formulario '${id}' ya expiró. Solo estaba disponible hasta las ${fechaCierre.toLocaleTimeString()}.</h2>`;
-          //return;
+          document.getElementById("tituloFormulario").textContent = data.titulo;
+          document.getElementById("contador").textContent = `⛔ El formulario ha caducado. Estaba disponible hasta las ${fechaCierre.toLocaleTimeString()}.`;
+          document.getElementById("formulario").style.display = "none";
+          cargarRespuestas(id); // 👈 aún cargamos la tabla
+          return; // ✅ pero ya no usamos innerHTML que borraría la tabla
         }
+
 
         const contadorEl = document.getElementById("contador");
         const actualizarContador = () => {
