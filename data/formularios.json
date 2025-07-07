@@ -2,5 +2,9 @@
   "gatos": {
     "titulo": "Especialidad de Gatos",
     "fechaCierre": "2025-07-07"
+  },
+  "perros": {
+    "titulo": "Especialidad de Perros",
+    "fechaCierre": "2025-07-07T06:23:12.033Z"
   }
 }
