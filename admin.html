@@ -10,9 +10,9 @@
   <img src="logo1.png" style="width: 25%;" alt="">
   <h2>Crear nuevo formulario de Asistencia</h2>
   <form id="crearFormulario">
-    <label>ID del formulario (ej. flores):</label><br>
+    <label>ID del formulario (ej. nombre y apellido de instructor) (ej. JuanCarlos):</label><br>
     <input type="text" id="formId" required><br><br>
-    <label>Título:</label><br>
+    <label>Título: (ej. Especialidad de Flores)</label><br>
     <input type="text" id="titulo" required><br><br>
     <!-- Campo oculto: se llena automáticamente con la fecha de hoy -->
     <input type="hidden" id="fechaCierre">
@@ -43,6 +43,35 @@
 
     document.getElementById("crearFormulario").addEventListener("submit", function (e) {
       e.preventDefault();
+
+      const errorEl = document.getElementById("mensaje");
+    errorEl.textContent = "";
+
+    // 1️⃣ NORMALIZAR formId: quitar espacios y capitalizar cada palabra
+    const rawId = document.getElementById("formId").value.trim();
+    const idPalabras = rawId.split(/\s+/).filter(Boolean);
+    if (idPalabras.length === 0) {
+      errorEl.textContent = "El ID no puede estar vacío.";
+      return;
+    }
+    const formId = idPalabras
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join("");
+    // Volvemos a escribirlo (opcional)
+    document.getElementById("formId").value = formId;
+    // 2️⃣ VALIDAR y NORMALIZAR título: cada palabra mayúscula inicial
+    const rawTitulo = document.getElementById("titulo").value.trim();
+    const tituloPalabras = rawTitulo.split(/\s+/).filter(Boolean);
+    if (tituloPalabras.length === 0) {
+      errorEl.textContent = "El título no puede estar vacío.";
+      return;
+    }
+    // Corregir automáticamente el título: primera letra en mayúscula
+const tituloP = tituloPalabras
+  .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+  .join(" ");
+document.getElementById("titulo").value = tituloP;
+
 
       const id = document.getElementById("formId").value.trim();
       const titulo = document.getElementById("titulo").value.trim();
