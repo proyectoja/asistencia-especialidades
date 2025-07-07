@@ -28,28 +28,25 @@
       const fecha = new Date().toISOString().split("T")[0]; // Fecha de hoy (YYYY-MM-DD)
       document.getElementById("fechaCierre").value = fecha;
 
-      fetch("data/formularios.json")
-        .then(res => res.json())
-        .then(data => {
-          data[id] = { titulo, fechaCierre: fecha };
-          return fetch("data/formularios.json", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data, null, 2)
-          });
-        })
-        .then(() => {
-          const enlace = `${baseURL}/formulario.html?id=${encodeURIComponent(id)}`;
-          document.getElementById("mensaje").innerHTML = `
-            ✅ Formulario creado con éxito para hoy.<br>
-            👉 <a href="${enlace}" target="_blank">${enlace}</a>
-            <br><button onclick="navigator.clipboard.writeText('${enlace}')">📋 Copiar enlace</button>
-          `;
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("mensaje").textContent = "❌ Error al guardar.";
-        });
+      fetch("/api/guardarFormulario", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ id, titulo, fechaCierre: fecha })
+})
+.then(res => {
+  if (!res.ok) throw new Error("No se pudo guardar");
+  const enlace = `${baseURL}/formulario.html?id=${encodeURIComponent(id)}`;
+  document.getElementById("mensaje").innerHTML = `
+    ✅ Formulario creado con éxito.<br>
+    👉 <a href="${enlace}" target="_blank">${enlace}</a>
+    <br><button onclick="navigator.clipboard.writeText('${enlace}')">📋 Copiar enlace</button>
+  `;
+})
+.catch(err => {
+  console.error(err);
+  document.getElementById("mensaje").textContent = "❌ Error al guardar.";
+});
+
     });
   </script>
 </body>
