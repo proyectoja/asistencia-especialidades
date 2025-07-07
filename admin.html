@@ -164,6 +164,7 @@ async function cargarFormularios() {
       `;
       tabla.insertAdjacentHTML("beforeend", fila);
     });
+    
   } catch (e) {
     console.error(e);
     tabla.innerHTML = "<tr><td colspan='5'>❌ Error al cargar formularios.</td></tr>";
