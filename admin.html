@@ -104,6 +104,7 @@ document.getElementById("titulo").value = tituloP;
     👉 <a href="${enlace}" target="_blank">${enlace}</a>
     <br><button onclick="navigator.clipboard.writeText('${enlace}')">📋 Copiar enlace</button>
   `;
+  cargarFormularios();
         })
         .catch(err => {
           console.error(err);
