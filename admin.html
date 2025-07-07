@@ -73,8 +73,9 @@ const tituloP = tituloPalabras
 document.getElementById("titulo").value = tituloP;
 
 
-      const id = document.getElementById("formId").value.trim();
-      const titulo = document.getElementById("titulo").value.trim();
+      let id = document.getElementById("formId").value.trim();
+      let titulo = document.getElementById("titulo").value.trim();
+      id = id + "-" + titulo.replace(/\s+/g, "");
        // Calcular la hora de caducidad: ahora + 1 hora
        const ahora = new Date();
       const fechaCierre = new Date(ahora.getTime() + 60 * 60 * 1000).toISOString(); // +1 hora en ISO
