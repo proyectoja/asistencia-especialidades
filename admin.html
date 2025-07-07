@@ -11,8 +11,9 @@
     <input type="text" id="formId" required><br><br>
     <label>Título:</label><br>
     <input type="text" id="titulo" required><br><br>
-    <label>Fecha de cierre (YYYY-MM-DD):</label><br>
-    <input type="date" id="fechaCierre" required><br><br>
+    <!-- Ocultamos el campo de fecha porque se generará automáticamente -->
+<input type="hidden" id="fechaCierre">
+
     <button type="submit">Crear Formulario</button>
   </form>
   <p id="mensaje"></p>
@@ -24,7 +25,10 @@
       e.preventDefault();
       const id = document.getElementById("formId").value.trim();
       const titulo = document.getElementById("titulo").value.trim();
-      const fecha = document.getElementById("fechaCierre").value;
+
+      const fecha = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+document.getElementById("fechaCierre").value = fecha;
+
   
       fetch("data/formularios.json")
         .then(res => res.json())
