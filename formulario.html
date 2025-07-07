@@ -34,7 +34,8 @@
 
   <p id="mensaje"></p>
 
-  <h3>📊 Respuestas registradas | Se actualiza cada 1 minuto.</h3>
+  <h3>📊 Respuestas registradas | Se actualiza cada 1 minuto.</h3><p id="contadorRecarga">🔄 Próxima recarga en: <span id="segundos">60</span> segundos</p>
+
   <p>Información exclusiva para instructores y directores. Su información es borrada después de 90 días</p>
   <table border="1" id="tablaRespuestas" style="border-collapse: collapse; width: 100%;">
     <thead>
@@ -120,9 +121,25 @@
         document.getElementById("tituloFormulario").textContent = data.titulo;
         document.getElementById("idFormulario").value = id;
         document.getElementById("formulario").style.display = "block";
+        
+        // Mostrar cuenta regresiva hacia la próxima recarga
+        let segundosRestantes = 60;
+
+        // Actualizar visualmente cada segundo
+        setInterval(() => {
+          segundosRestantes--;
+          document.getElementById("segundos").textContent = segundosRestantes;
+
+          if (segundosRestantes === 0) {
+            segundosRestantes = 60; // Reiniciar contador
+          }
+        }, 1000);
+
+        // Recargar cada 60 segundos
         setInterval(() => {
           cargarRespuestas(id);
         }, 60000);
+
 
       } catch (error) {
         console.error(error);
