@@ -25,8 +25,18 @@ export default async function handler(req, res) {
         sha = archivoJson.sha;
       }
   
-      // Agregar nuevo formulario
-      data[id] = { titulo, fechaCierre };
+      // ✅ Validar si ya existe el ID
+    if (data[id]) {
+        return res.status(409).json({ error: `El formulario con ID '${id}' ya existe.` });
+      }
+  
+      // ✅ Agregar nuevo formulario
+      data[id] = {
+        titulo,
+        fechaCierre, // formato ISO completo con hora
+        creado: new Date().toISOString()
+      };
+
       const nuevoContenido = Buffer.from(JSON.stringify(data, null, 2)).toString("base64");
   
       // Guardar en GitHub

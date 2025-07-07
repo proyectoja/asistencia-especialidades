@@ -32,6 +32,18 @@
   <p id="mensaje"></p>
 
   <script>
+    // Generador básico de UUID
+function generarUUID() {
+  return crypto.randomUUID(); 
+}
+
+let visitanteId = localStorage.getItem("visitanteId");
+if (!visitanteId) {
+  visitanteId = generarUUID();
+  localStorage.setItem("visitanteId", visitanteId);
+}
+
+
     document.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
@@ -94,6 +106,7 @@
       e.preventDefault();
 
       const datos = Object.fromEntries(new FormData(this).entries());
+      datos.visitanteId = visitanteId;
 
       const res = await fetch("/api/guardar", {
         method: "POST",
