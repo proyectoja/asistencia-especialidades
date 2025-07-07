@@ -29,6 +29,7 @@
       <th>Título</th>
       <th>Fecha de cierre</th>
       <th>Creado</th>
+      <th>Acción</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -121,6 +122,11 @@ async function cargarFormularios() {
           <td>${f.titulo}</td>
           <td>${new Date(f.fechaCierre).toLocaleString()}</td>
           <td>${f.creado ? new Date(f.creado).toLocaleString() : '―'}</td>
+          <td>
+        <a href="https://asistencia-especialidades.vercel.app/formulario.html?id=${id}" target="_blank">
+          <button>Ver registros</button>
+        </a>
+      </td>
         </tr>
       `;
       tabla.insertAdjacentHTML("beforeend", fila);
