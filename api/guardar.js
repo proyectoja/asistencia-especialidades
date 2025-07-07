@@ -25,10 +25,7 @@ export default async function handler(req, res) {
     registros = JSON.parse(decoded);
     sha = data.sha;
 
-    const yaExiste = registros.find(r => r.visitanteId === visitanteId);
-    if (yaExiste) {
-      return res.status(409).json({ error: "Ya has enviado tu respuesta desde este navegador." });
-    }S
+    
   }
 
   // Agregar el nuevo registro
