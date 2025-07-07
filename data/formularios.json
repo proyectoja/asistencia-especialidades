@@ -16,5 +16,20 @@
     "titulo": "b",
     "fechaCierre": "2025-07-07T07:09:45.289Z",
     "creado": "2025-07-07T06:09:45.721Z"
+  },
+  "patos": {
+    "titulo": "Especialidad de Patos",
+    "fechaCierre": "2025-07-07T07:29:45.538Z",
+    "creado": "2025-07-07T06:29:45.925Z"
+  },
+  "patos2": {
+    "titulo": "Especialidad de Patos2",
+    "fechaCierre": "2025-07-07T07:32:34.292Z",
+    "creado": "2025-07-07T06:32:34.740Z"
+  },
+  "patos22": {
+    "titulo": "Especialidad de Patos22",
+    "fechaCierre": "2025-07-07T07:34:57.998Z",
+    "creado": "2025-07-07T06:34:58.341Z"
   }
 }
