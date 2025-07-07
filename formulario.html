@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Formulario</title>
 </head>
+
 <body>
   <h2 id="tituloFormulario">Cargando...</h2>
   <p id="contador"></p>
@@ -32,88 +34,88 @@
   <p id="mensaje"></p>
 
   <h3>📊 Respuestas registradas</h3>
-<table border="1" id="tablaRespuestas" style="border-collapse: collapse; width: 100%;">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Nombre</th>
-      <th>Correo</th>
-      <th>Edad</th>
-      <th>Teléfono</th>
-      <th>Asociación</th>
-      <th>Fecha</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <table border="1" id="tablaRespuestas" style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Edad</th>
+        <th>Teléfono</th>
+        <th>Asociación</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
 
   <script>
     // Generador básico de UUID
-function generarUUID() {
-  return crypto.randomUUID(); 
-}
+    function generarUUID() {
+      return crypto.randomUUID();
+    }
 
-let visitanteId = localStorage.getItem("visitanteId");
-if (!visitanteId) {
-  visitanteId = generarUUID();
-  localStorage.setItem("visitanteId", visitanteId);
-}
+    let visitanteId = localStorage.getItem("visitanteId");
+    if (!visitanteId) {
+      visitanteId = generarUUID();
+      localStorage.setItem("visitanteId", visitanteId);
+    }
 
 
     document.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
       const hoy = new Date().toISOString().split("T")[0];
-  
+
       if (!id) {
         document.body.innerHTML = "<h2>❌ Error: ID de formulario no especificado.</h2>";
         return;
       }
-  
+
       try {
         const res = await fetch(`/api/obtenerFormulario?id=${id}`);
         if (!res.ok) {
           document.body.innerHTML = `<h2>❌ Formulario '${id}' no encontrado.</h2>`;
           return;
         }
-  
+
         const data = await res.json();
-  
+
         // ⏱️ INSERTAR CONTADOR DESDE AQUÍ
         const fechaCierre = new Date(data.fechaCierre);
         const ahora = new Date();
-  
+
         if (ahora > fechaCierre) {
           document.body.innerHTML = `<h2>⏳ El formulario '${id}' ya expiró. Solo estaba disponible hasta las ${fechaCierre.toLocaleTimeString()}.</h2>`;
-          return;
+          //return;
         }
-  
+
         const contadorEl = document.getElementById("contador");
         const actualizarContador = () => {
           const ahora = new Date();
           const restante = fechaCierre - ahora;
-  
+
           if (restante <= 0) {
             contadorEl.textContent = "⛔ El formulario ha caducado.";
             document.getElementById("formulario").style.display = "none";
             return;
           }
-  
+
           const minutos = Math.floor((restante / 1000 / 60) % 60);
           const segundos = Math.floor((restante / 1000) % 60);
           contadorEl.textContent = `⏳ El formulario se cerrará en: ${minutos}:${segundos.toString().padStart(2, "0")}`;
         };
-  
+
         actualizarContador();
         const intervalo = setInterval(actualizarContador, 1000);
         // ⏱️ HASTA AQUÍ
-  
+
         document.getElementById("tituloFormulario").textContent = data.titulo;
         document.getElementById("idFormulario").value = id;
         document.getElementById("formulario").style.display = "block";
         cargarRespuestas(id);
-  
+
       } catch (error) {
         console.error(error);
         document.body.innerHTML = "<h2>❌ Error al cargar el formulario.</h2>";
@@ -122,27 +124,27 @@ if (!visitanteId) {
 
 
       // Mostrar respuestas del formulario en la tabla
-async function cargarRespuestas(idFormulario) {
-  const tablaBody = document.querySelector("#tablaRespuestas tbody");
-  tablaBody.innerHTML = "<tr><td colspan='7'>Cargando respuestas...</td></tr>";
+      async function cargarRespuestas(idFormulario) {
+        const tablaBody = document.querySelector("#tablaRespuestas tbody");
+        tablaBody.innerHTML = "<tr><td colspan='7'>Cargando respuestas...</td></tr>";
 
-  try {
-    const res = await fetch(`/api/verRespuestas?id=${idFormulario}`);
-    if (!res.ok) {
-      tablaBody.innerHTML = "<tr><td colspan='7'>No hay respuestas aún.</td></tr>";
-      return;
-    }
+        try {
+          const res = await fetch(`/api/verRespuestas?id=${idFormulario}`);
+          if (!res.ok) {
+            tablaBody.innerHTML = "<tr><td colspan='7'>No hay respuestas aún.</td></tr>";
+            return;
+          }
 
-    const respuestas = await res.json();
+          const respuestas = await res.json();
 
-    if (!respuestas.length) {
-      tablaBody.innerHTML = "<tr><td colspan='7'>No hay respuestas aún.</td></tr>";
-      return;
-    }
+          if (!respuestas.length) {
+            tablaBody.innerHTML = "<tr><td colspan='7'>No hay respuestas aún.</td></tr>";
+            return;
+          }
 
-    tablaBody.innerHTML = ""; // limpiar
-    respuestas.forEach((r, index) => {
-      const fila = `
+          tablaBody.innerHTML = ""; // limpiar
+          respuestas.forEach((r, index) => {
+            const fila = `
         <tr>
           <td>${index + 1}</td>
           <td>${r.nombre}</td>
@@ -153,14 +155,14 @@ async function cargarRespuestas(idFormulario) {
           <td>${new Date(r.fecha).toLocaleString()}</td>
         </tr>
       `;
-      tablaBody.insertAdjacentHTML("beforeend", fila);
-    });
+            tablaBody.insertAdjacentHTML("beforeend", fila);
+          });
 
-  } catch (error) {
-    tablaBody.innerHTML = "<tr><td colspan='7'>Error al cargar respuestas.</td></tr>";
-    console.error(error);
-  }
-}
+        } catch (error) {
+          tablaBody.innerHTML = "<tr><td colspan='7'>Error al cargar respuestas.</td></tr>";
+          console.error(error);
+        }
+      }
 
     });
 
@@ -187,6 +189,7 @@ async function cargarRespuestas(idFormulario) {
       }
     });
   </script>
-  
+
 </body>
+
 </html>
