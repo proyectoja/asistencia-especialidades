@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <h2>Crear nuevo formulario</h2>
+  <h2>Crear nuevo formulario de Asistencia</h2>
   <form id="crearFormulario">
     <label>ID del formulario (ej. flores):</label><br>
     <input type="text" id="formId" required><br><br>
@@ -20,6 +20,20 @@
   <p id="mensaje"></p>
   <button id="btnLimpiarFormularios">🧹 Limpiar formularios vencidos</button>
 <p id="resultadoLimpieza"></p>
+<h3>📋 Formularios creados</h3>
+<table id="tablaFormularios" border="1" style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Fecha de cierre</th>
+      <th>Creado</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
 
 
   <script>
@@ -77,6 +91,49 @@
     console.error(err);
     pResultado.textContent = "❌ Ocurrió un error inesperado al limpiar.";
   }
+});
+
+
+
+async function cargarFormularios() {
+  const tabla = document.querySelector("#tablaFormularios tbody");
+  tabla.innerHTML = "<tr><td colspan='5'>Cargando formularios...</td></tr>";
+
+  try {
+    const res = await fetch("/api/listarFormularios");
+    if (!res.ok) throw new Error("No se pudo cargar");
+
+    const data = await res.json();
+    const claves = Object.keys(data);
+
+    if (!claves.length) {
+      tabla.innerHTML = "<tr><td colspan='5'>No hay formularios creados.</td></tr>";
+      return;
+    }
+
+    tabla.innerHTML = "";
+    claves.forEach((id, i) => {
+      const f = data[id];
+      const fila = `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${id}</td>
+          <td>${f.titulo}</td>
+          <td>${new Date(f.fechaCierre).toLocaleString()}</td>
+          <td>${f.creado ? new Date(f.creado).toLocaleString() : '―'}</td>
+        </tr>
+      `;
+      tabla.insertAdjacentHTML("beforeend", fila);
+    });
+  } catch (e) {
+    console.error(e);
+    tabla.innerHTML = "<tr><td colspan='5'>❌ Error al cargar formularios.</td></tr>";
+  }
+}
+
+// Ejecutar cuando cargue la página
+document.addEventListener("DOMContentLoaded", () => {
+  cargarFormularios();
 });
 
   </script>
