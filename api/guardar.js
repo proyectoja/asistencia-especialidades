@@ -6,47 +6,50 @@ export default async function handler(req, res) {
   const nuevoRegistro = { nombre, correo, edad, telefono, asociacion, fecha };
 
   const archivo = `respuestas/${id}/respuestas.json`;
+  const repo = "proyectoja/asistencia-especialidades";
 
-  // Verificar si ya existe el archivo
-  const response = await fetch(`https://api.github.com/repos/proyectoja/asistencia-especialidades/contents/${archivo}`, {
+  // Leer el archivo actual desde GitHub
+  const respuesta = await fetch(`https://api.github.com/repos/${repo}/contents/${archivo}`, {
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`,
       'Content-Type': 'application/json'
     }
   });
 
-  let contenidoExistente = [];
+  let registros = [];
   let sha = null;
 
-  if (response.ok) {
-    const data = await response.json();
+  if (respuesta.ok) {
+    const data = await respuesta.json();
     const decoded = Buffer.from(data.content, 'base64').toString();
-    contenidoExistente = JSON.parse(decoded);
+    registros = JSON.parse(decoded);
     sha = data.sha;
   }
 
-  // Agregar la nueva entrada
-  contenidoExistente.push(nuevoRegistro);
-  const nuevoContenido = Buffer.from(JSON.stringify(contenidoExistente, null, 2)).toString('base64');
+  // Agregar el nuevo registro
+  registros.push(nuevoRegistro);
+  const contenidoCodificado = Buffer.from(JSON.stringify(registros, null, 2)).toString('base64');
 
-  const guardar = await fetch(`https://api.github.com/repos/proyectoja/asistencia-especialidades/contents/${archivo}`, {
+  // Guardar el archivo actualizado en GitHub
+  const guardar = await fetch(`https://api.github.com/repos/${repo}/contents/${archivo}`, {
     method: 'PUT',
     headers: {
       Authorization: `token ${process.env.GITHUB_TOKEN}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      message: `Nuevo registro en ${archivo}`,
-      content: nuevoContenido,
+      message: `Nueva respuesta en ${archivo}`,
+      content: contenidoCodificado,
       branch: 'main',
-      ...(sha && { sha }) // se incluye solo si ya existe
+      ...(sha && { sha })
     })
   });
 
   if (guardar.ok) {
-    res.status(200).send("✅ Respuesta guardada en respuestas.json");
+    res.status(200).send("✅ Respuesta guardada correctamente.");
   } else {
     const error = await guardar.json();
+    console.error(error);
     res.status(500).send("❌ Error al guardar: " + JSON.stringify(error));
   }
 }
